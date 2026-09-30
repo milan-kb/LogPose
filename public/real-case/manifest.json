@@ -1,0 +1,714 @@
+{
+  "case": "glorys12-argo-2902766-20230915",
+  "acquiredUTC": "2026-09-29T17:47:34.313979+00:00",
+  "product": "GLOBAL_MULTIYEAR_PHY_001_030",
+  "version": "GLORYS12V1",
+  "catalogueDataset": "cmems_mod_glo_phy_my_0.083deg_P1D-m, catalogue version 202311",
+  "modelDOI": "10.48670/moi-00021",
+  "mirrorDOI": "10.5065/3NSD-QP06",
+  "modelFiles": [
+    {
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/files/d010049/2023/mercatorglorys12v1_gl12_mean_20230915_R20230920.nc",
+      "file": "model/mercatorglorys12v1_gl12_mean_20230915_R20230920.nc",
+      "sha256": "a725c0ce59b77d114e7fbda7d5da57f178a2d8d168df546fc6f1b5233225eefa",
+      "attributes": {
+        "title": "daily mean fields from Global Ocean Physics Analysis and Forecast updated Daily",
+        "easting": "longitude",
+        "northing": "latitude",
+        "history": "2023/12/01 08:50:32 MERCATOR OCEAN Netcdf creation",
+        "source": "MERCATOR GLORYS12V1",
+        "institution": "MERCATOR OCEAN",
+        "references": "http://www.mercator-ocean.fr",
+        "comment": "CMEMS product",
+        "Conventions": "CF-1.4",
+        "domain_name": "GL12",
+        "field_type": "mean",
+        "field_date": "2023-09-15 00:00:00",
+        "field_julian_date": 26920.0,
+        "julian_day_unit": "days since 1950-01-01 00:00:00",
+        "forecast_range": "",
+        "forecast_type": "",
+        "bulletin_date": "2023-09-20 00:00:00",
+        "bulletin_type": "operational",
+        "longitude_min": -180.0,
+        "longitude_max": 179.9166717529297,
+        "latitude_min": -80.0,
+        "latitude_max": 90.0,
+        "z_min": 0.49402499198913574,
+        "z_max": 5727.9169921875,
+        "DODS_EXTRA.Unlimited_Dimension": "time"
+      },
+      "variables": {
+        "time": {
+          "long_name": "Time (hours since 1950-01-01)",
+          "standard_name": "time",
+          "calendar": "gregorian",
+          "valid_min": 646092.0,
+          "valid_max": 646092.0,
+          "units": "hours since 1950-01-01 00:00:00",
+          "axis": "T",
+          "_ChunkSizes": 1024
+        },
+        "depth": {
+          "valid_min": 0.49402499198913574,
+          "valid_max": 5727.9169921875,
+          "units": "m",
+          "positive": "down",
+          "unit_long": "Meters",
+          "long_name": "Depth",
+          "standard_name": "depth",
+          "axis": "Z",
+          "_ChunkSizes": 50
+        },
+        "latitude": {
+          "valid_min": -80.0,
+          "valid_max": 90.0,
+          "step": 0.08333587646484375,
+          "units": "degrees_north",
+          "unit_long": "Degrees North",
+          "long_name": "Latitude",
+          "standard_name": "latitude",
+          "axis": "Y",
+          "_ChunkSizes": 2041
+        },
+        "longitude": {
+          "valid_min": -180.0,
+          "valid_max": 179.9166717529297,
+          "step": 0.0833282470703125,
+          "units": "degrees_east",
+          "unit_long": "Degrees East",
+          "long_name": "Longitude",
+          "standard_name": "longitude",
+          "axis": "X",
+          "_ChunkSizes": 4320
+        },
+        "thetao": {
+          "_FillValue": -32767,
+          "long_name": "Temperature",
+          "standard_name": "sea_water_potential_temperature",
+          "units": "degrees_C",
+          "unit_long": "Degrees Celsius",
+          "add_offset": 21.0,
+          "scale_factor": 0.0007324442267417908,
+          "valid_min": -32766,
+          "valid_max": 21320,
+          "cell_methods": "area: mean",
+          "_ChunkSizes": [
+            1,
+            7,
+            341,
+            720
+          ]
+        }
+      }
+    },
+    {
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/files/d010049/2023/mercatorglorys12v1_gl12_mean_20230916_R20230920.nc",
+      "file": "model/mercatorglorys12v1_gl12_mean_20230916_R20230920.nc",
+      "sha256": "f6dfb62532b27b68d1207217ae649992dcc008d72acb10cd5687c538f5f3ff5c",
+      "attributes": {
+        "title": "daily mean fields from Global Ocean Physics Analysis and Forecast updated Daily",
+        "easting": "longitude",
+        "northing": "latitude",
+        "history": "2023/12/01 08:51:03 MERCATOR OCEAN Netcdf creation",
+        "source": "MERCATOR GLORYS12V1",
+        "institution": "MERCATOR OCEAN",
+        "references": "http://www.mercator-ocean.fr",
+        "comment": "CMEMS product",
+        "Conventions": "CF-1.4",
+        "domain_name": "GL12",
+        "field_type": "mean",
+        "field_date": "2023-09-16 00:00:00",
+        "field_julian_date": 26921.0,
+        "julian_day_unit": "days since 1950-01-01 00:00:00",
+        "forecast_range": "",
+        "forecast_type": "",
+        "bulletin_date": "2023-09-20 00:00:00",
+        "bulletin_type": "operational",
+        "longitude_min": -180.0,
+        "longitude_max": 179.9166717529297,
+        "latitude_min": -80.0,
+        "latitude_max": 90.0,
+        "z_min": 0.49402499198913574,
+        "z_max": 5727.9169921875,
+        "DODS_EXTRA.Unlimited_Dimension": "time"
+      },
+      "variables": {
+        "time": {
+          "long_name": "Time (hours since 1950-01-01)",
+          "standard_name": "time",
+          "calendar": "gregorian",
+          "valid_min": 646116.0,
+          "valid_max": 646116.0,
+          "units": "hours since 1950-01-01 00:00:00",
+          "axis": "T",
+          "_ChunkSizes": 1024
+        },
+        "depth": {
+          "valid_min": 0.49402499198913574,
+          "valid_max": 5727.9169921875,
+          "units": "m",
+          "positive": "down",
+          "unit_long": "Meters",
+          "long_name": "Depth",
+          "standard_name": "depth",
+          "axis": "Z",
+          "_ChunkSizes": 50
+        },
+        "latitude": {
+          "valid_min": -80.0,
+          "valid_max": 90.0,
+          "step": 0.08333587646484375,
+          "units": "degrees_north",
+          "unit_long": "Degrees North",
+          "long_name": "Latitude",
+          "standard_name": "latitude",
+          "axis": "Y",
+          "_ChunkSizes": 2041
+        },
+        "longitude": {
+          "valid_min": -180.0,
+          "valid_max": 179.9166717529297,
+          "step": 0.0833282470703125,
+          "units": "degrees_east",
+          "unit_long": "Degrees East",
+          "long_name": "Longitude",
+          "standard_name": "longitude",
+          "axis": "X",
+          "_ChunkSizes": 4320
+        },
+        "thetao": {
+          "_FillValue": -32767,
+          "long_name": "Temperature",
+          "standard_name": "sea_water_potential_temperature",
+          "units": "degrees_C",
+          "unit_long": "Degrees Celsius",
+          "add_offset": 21.0,
+          "scale_factor": 0.0007324442267417908,
+          "valid_min": -32766,
+          "valid_max": 21160,
+          "cell_methods": "area: mean",
+          "_ChunkSizes": [
+            1,
+            7,
+            341,
+            720
+          ]
+        }
+      }
+    },
+    {
+      "url": "https://tds.gdex.ucar.edu/thredds/dodsC/files/d010049/2023/mercatorglorys12v1_gl12_mean_20230917_R20230920.nc",
+      "file": "model/mercatorglorys12v1_gl12_mean_20230917_R20230920.nc",
+      "sha256": "88b64fef6475a3289fdda5cd020b7ea864f53baac24be3421895763057453d88",
+      "attributes": {
+        "title": "daily mean fields from Global Ocean Physics Analysis and Forecast updated Daily",
+        "easting": "longitude",
+        "northing": "latitude",
+        "history": "2023/12/01 08:50:49 MERCATOR OCEAN Netcdf creation",
+        "source": "MERCATOR GLORYS12V1",
+        "institution": "MERCATOR OCEAN",
+        "references": "http://www.mercator-ocean.fr",
+        "comment": "CMEMS product",
+        "Conventions": "CF-1.4",
+        "domain_name": "GL12",
+        "field_type": "mean",
+        "field_date": "2023-09-17 00:00:00",
+        "field_julian_date": 26922.0,
+        "julian_day_unit": "days since 1950-01-01 00:00:00",
+        "forecast_range": "",
+        "forecast_type": "",
+        "bulletin_date": "2023-09-20 00:00:00",
+        "bulletin_type": "operational",
+        "longitude_min": -180.0,
+        "longitude_max": 179.9166717529297,
+        "latitude_min": -80.0,
+        "latitude_max": 90.0,
+        "z_min": 0.49402499198913574,
+        "z_max": 5727.9169921875,
+        "DODS_EXTRA.Unlimited_Dimension": "time"
+      },
+      "variables": {
+        "time": {
+          "long_name": "Time (hours since 1950-01-01)",
+          "standard_name": "time",
+          "calendar": "gregorian",
+          "valid_min": 646140.0,
+          "valid_max": 646140.0,
+          "units": "hours since 1950-01-01 00:00:00",
+          "axis": "T",
+          "_ChunkSizes": 1024
+        },
+        "depth": {
+          "valid_min": 0.49402499198913574,
+          "valid_max": 5727.9169921875,
+          "units": "m",
+          "positive": "down",
+          "unit_long": "Meters",
+          "long_name": "Depth",
+          "standard_name": "depth",
+          "axis": "Z",
+          "_ChunkSizes": 50
+        },
+        "latitude": {
+          "valid_min": -80.0,
+          "valid_max": 90.0,
+          "step": 0.08333587646484375,
+          "units": "degrees_north",
+          "unit_long": "Degrees North",
+          "long_name": "Latitude",
+          "standard_name": "latitude",
+          "axis": "Y",
+          "_ChunkSizes": 2041
+        },
+        "longitude": {
+          "valid_min": -180.0,
+          "valid_max": 179.9166717529297,
+          "step": 0.0833282470703125,
+          "units": "degrees_east",
+          "unit_long": "Degrees East",
+          "long_name": "Longitude",
+          "standard_name": "longitude",
+          "axis": "X",
+          "_ChunkSizes": 4320
+        },
+        "thetao": {
+          "_FillValue": -32767,
+          "long_name": "Temperature",
+          "standard_name": "sea_water_potential_temperature",
+          "units": "degrees_C",
+          "unit_long": "Degrees Celsius",
+          "add_offset": 21.0,
+          "scale_factor": 0.0007324442267417908,
+          "valid_min": -32759,
+          "valid_max": 21190,
+          "cell_methods": "area: mean",
+          "_ChunkSizes": [
+            1,
+            7,
+            341,
+            720
+          ]
+        }
+      }
+    }
+  ],
+  "argo": {
+    "url": "https://data-argo.ifremer.fr/dac/csio/2902766/profiles/D2902766_135.nc",
+    "sha256": "6828c4351a32147394b53cdb67fc0d8ce607ece6f3e9c470b6440f68af854d85",
+    "attributes": {
+      "title": "Argo float vertical profile",
+      "institution": "CSIO",
+      "source": "Argo float",
+      "history": "2023-09-15T22:01:11Z creation",
+      "references": "http://www.argodatamgt.org/Documentation",
+      "comment": "free text",
+      "user_manual_version": "3.1",
+      "Conventions": "Argo-3.1 CF-1.6",
+      "featureType": "trajectoryProfile",
+      "comment_dmqc_operator": "PRIMARY | https://orcid.org/0000-0001-5065-4078 | Xiaofen Wu | CSIO"
+    },
+    "variables": {
+      "DATA_TYPE": {
+        "long_name": "Data type",
+        "conventions": "Argo reference table 1",
+        "_FillValue": " "
+      },
+      "FORMAT_VERSION": {
+        "long_name": "File format version",
+        "_FillValue": " "
+      },
+      "HANDBOOK_VERSION": {
+        "long_name": "Data handbook version",
+        "_FillValue": " "
+      },
+      "REFERENCE_DATE_TIME": {
+        "long_name": "Date of reference for Julian days",
+        "conventions": "YYYYMMDDHHMISS",
+        "_FillValue": " "
+      },
+      "DATE_CREATION": {
+        "long_name": "Date of file creation",
+        "conventions": "YYYYMMDDHHMISS",
+        "_FillValue": " "
+      },
+      "DATE_UPDATE": {
+        "long_name": "Date of update of this file",
+        "conventions": "YYYYMMDDHHMISS",
+        "_FillValue": " "
+      },
+      "PLATFORM_NUMBER": {
+        "long_name": "Float unique identifier",
+        "conventions": "WMO float identifier : A9IIIII",
+        "_FillValue": " "
+      },
+      "PLATFORM_TYPE": {
+        "long_name": "Type of float",
+        "conventions": "Argo reference table 23",
+        "_FillValue": " "
+      },
+      "PROJECT_NAME": {
+        "long_name": "Name of the project",
+        "_FillValue": " "
+      },
+      "PI_NAME": {
+        "long_name": "Name of the principal investigator",
+        "_FillValue": " "
+      },
+      "STATION_PARAMETERS": {
+        "long_name": "List of available parameters for the station",
+        "conventions": "Argo reference table 3",
+        "_FillValue": " "
+      },
+      "CYCLE_NUMBER": {
+        "long_name": "Float cycle number",
+        "conventions": "0...N, 0 : launch cycle (if exists), 1 : first complete cycle",
+        "_FillValue": 99999
+      },
+      "DIRECTION": {
+        "long_name": "Direction of the station profiles",
+        "conventions": "A: ascending profiles, D: descending profiles",
+        "_FillValue": " "
+      },
+      "DATA_CENTRE": {
+        "long_name": "Data centre in charge of float data processing",
+        "conventions": "Argo reference table 4",
+        "_FillValue": " "
+      },
+      "DC_REFERENCE": {
+        "long_name": "Station unique identifier in data centre",
+        "conventions": "Data centre convention",
+        "_FillValue": " "
+      },
+      "DATA_STATE_INDICATOR": {
+        "long_name": "Degree of processing the data have passed through",
+        "conventions": "Argo reference table 6",
+        "_FillValue": " "
+      },
+      "DATA_MODE": {
+        "long_name": "Delayed mode or real time data",
+        "conventions": "R : real time; D : delayed mode; A : real time with adjustment",
+        "_FillValue": " "
+      },
+      "FLOAT_SERIAL_NO": {
+        "long_name": "Serial number of the float",
+        "_FillValue": " "
+      },
+      "FIRMWARE_VERSION": {
+        "long_name": "Instrument firmware version",
+        "_FillValue": " "
+      },
+      "WMO_INST_TYPE": {
+        "long_name": "Coded instrument type",
+        "conventions": "Argo reference table 8",
+        "_FillValue": " "
+      },
+      "JULD": {
+        "long_name": "Julian day (UTC) of the station relative to REFERENCE_DATE_TIME",
+        "standard_name": "time",
+        "units": "days since 1950-01-01 00:00:00 UTC",
+        "conventions": "Relative julian days with decimal part (as parts of day)",
+        "resolution": 1.1574e-05,
+        "_FillValue": 999999.0,
+        "axis": "T"
+      },
+      "JULD_QC": {
+        "long_name": "Quality on date and time",
+        "conventions": "Argo reference table 2",
+        "_FillValue": " "
+      },
+      "JULD_LOCATION": {
+        "long_name": "Julian day (UTC) of the location relative to REFERENCE_DATE_TIME",
+        "units": "days since 1950-01-01 00:00:00 UTC",
+        "conventions": "Relative julian days with decimal part (as parts of day)",
+        "resolution": 1.1574e-05,
+        "_FillValue": 999999.0
+      },
+      "LATITUDE": {
+        "long_name": "Latitude of the station, best estimate",
+        "standard_name": "latitude",
+        "units": "degree_north",
+        "_FillValue": 99999.0,
+        "valid_min": -90.0,
+        "valid_max": 90.0,
+        "axis": "Y"
+      },
+      "LONGITUDE": {
+        "long_name": "Longitude of the station, best estimate",
+        "standard_name": "longitude",
+        "units": "degree_east",
+        "_FillValue": 99999.0,
+        "valid_min": -180.0,
+        "valid_max": 180.0,
+        "axis": "X"
+      },
+      "POSITION_QC": {
+        "long_name": "Quality on position (latitude and longitude)",
+        "conventions": "Argo reference table 2",
+        "_FillValue": " "
+      },
+      "POSITIONING_SYSTEM": {
+        "long_name": "Positioning system",
+        "_FillValue": " "
+      },
+      "PROFILE_PRES_QC": {
+        "long_name": "Global quality flag of PRES profile",
+        "conventions": "Argo reference table 2a",
+        "_FillValue": " "
+      },
+      "PROFILE_TEMP_QC": {
+        "long_name": "Global quality flag of TEMP profile",
+        "conventions": "Argo reference table 2a",
+        "_FillValue": " "
+      },
+      "PROFILE_PSAL_QC": {
+        "long_name": "Global quality flag of PSAL profile",
+        "conventions": "Argo reference table 2a",
+        "_FillValue": " "
+      },
+      "VERTICAL_SAMPLING_SCHEME": {
+        "long_name": "Vertical sampling scheme",
+        "conventions": "Argo reference table 16",
+        "_FillValue": " "
+      },
+      "CONFIG_MISSION_NUMBER": {
+        "long_name": "Unique number denoting the missions performed by the float",
+        "conventions": "1...N, 1 : first complete mission",
+        "_FillValue": 99999
+      },
+      "PRES": {
+        "long_name": "Sea water pressure, equals 0 at sea-level",
+        "standard_name": "sea_water_pressure",
+        "_FillValue": 99999.0,
+        "units": "decibar",
+        "valid_min": 0.0,
+        "valid_max": 12000.0,
+        "C_format": "%7.1f",
+        "FORTRAN_format": "F7.1",
+        "resolution": 0.10000000149011612,
+        "axis": "Z"
+      },
+      "PRES_QC": {
+        "long_name": "quality flag",
+        "conventions": "Argo reference table 2",
+        "_FillValue": " "
+      },
+      "PRES_ADJUSTED": {
+        "long_name": "Sea water pressure, equals 0 at sea-level",
+        "standard_name": "sea_water_pressure",
+        "_FillValue": 99999.0,
+        "units": "decibar",
+        "valid_min": 0.0,
+        "valid_max": 12000.0,
+        "C_format": "%7.1f",
+        "FORTRAN_format": "F7.1",
+        "resolution": 0.10000000149011612
+      },
+      "PRES_ADJUSTED_QC": {
+        "long_name": "quality flag",
+        "conventions": "Argo reference table 2",
+        "_FillValue": " "
+      },
+      "PRES_ADJUSTED_ERROR": {
+        "long_name": "Contains the error on the adjusted values as determined by the delayed mode QC process",
+        "_FillValue": 99999.0,
+        "units": "decibar",
+        "C_format": "%7.1f",
+        "FORTRAN_format": "F7.1",
+        "resolution": 0.10000000149011612
+      },
+      "TEMP": {
+        "long_name": "Sea temperature in-situ ITS-90 scale",
+        "standard_name": "sea_water_temperature",
+        "_FillValue": 99999.0,
+        "units": "degree_Celsius",
+        "valid_min": -2.5,
+        "valid_max": 40.0,
+        "C_format": "%9.3f",
+        "FORTRAN_format": "F9.3",
+        "resolution": 0.0010000000474974513
+      },
+      "TEMP_QC": {
+        "long_name": "quality flag",
+        "conventions": "Argo reference table 2",
+        "_FillValue": " "
+      },
+      "TEMP_ADJUSTED": {
+        "long_name": "Sea temperature in-situ ITS-90 scale",
+        "standard_name": "sea_water_temperature",
+        "_FillValue": 99999.0,
+        "units": "degree_Celsius",
+        "valid_min": -2.5,
+        "valid_max": 40.0,
+        "comment": "In situ measurement",
+        "C_format": "%9.3f",
+        "FORTRAN_format": "F9.3",
+        "resolution": 0.0010000000474974513
+      },
+      "TEMP_ADJUSTED_QC": {
+        "long_name": "quality flag",
+        "conventions": "Argo reference table 2",
+        "_FillValue": " "
+      },
+      "TEMP_ADJUSTED_ERROR": {
+        "long_name": "Contains the error on the adjusted values as determined by the delayed mode QC process",
+        "_FillValue": 99999.0,
+        "units": "degree_Celsius",
+        "C_format": "%9.3f",
+        "FORTRAN_format": "F9.3",
+        "resolution": 0.0010000000474974513
+      },
+      "PSAL": {
+        "long_name": "Practical salinity",
+        "standard_name": "sea_water_salinity",
+        "_FillValue": 99999.0,
+        "units": "psu",
+        "valid_min": 2.0,
+        "valid_max": 41.0,
+        "C_format": "%9.3f",
+        "FORTRAN_format": "F9.3",
+        "resolution": 0.0010000000474974513
+      },
+      "PSAL_QC": {
+        "long_name": "quality flag",
+        "conventions": "Argo reference table 2",
+        "_FillValue": " "
+      },
+      "PSAL_ADJUSTED": {
+        "long_name": "Practical salinity",
+        "standard_name": "sea_water_salinity",
+        "_FillValue": 99999.0,
+        "units": "psu",
+        "valid_min": 2.0,
+        "valid_max": 41.0,
+        "C_format": "%9.3f",
+        "FORTRAN_format": "F9.3",
+        "resolution": 0.0010000000474974513
+      },
+      "PSAL_ADJUSTED_QC": {
+        "long_name": "quality flag",
+        "conventions": "Argo reference table 2",
+        "_FillValue": " "
+      },
+      "PSAL_ADJUSTED_ERROR": {
+        "long_name": "Contains the error on the adjusted values as determined by the delayed mode QC process",
+        "_FillValue": 99999.0,
+        "units": "psu",
+        "C_format": "%9.3f",
+        "FORTRAN_format": "F9.3",
+        "resolution": 0.0010000000474974513
+      },
+      "PARAMETER": {
+        "long_name": "List of parameters with calibration information",
+        "conventions": "Argo reference table 3",
+        "_FillValue": " "
+      },
+      "SCIENTIFIC_CALIB_EQUATION": {
+        "long_name": "Calibration equation for this parameter",
+        "_FillValue": " "
+      },
+      "SCIENTIFIC_CALIB_COEFFICIENT": {
+        "long_name": "Calibration coefficients for this equation",
+        "_FillValue": " "
+      },
+      "SCIENTIFIC_CALIB_COMMENT": {
+        "long_name": "Comment applying to this parameter calibration",
+        "_FillValue": " "
+      },
+      "SCIENTIFIC_CALIB_DATE": {
+        "long_name": "Date of calibration",
+        "conventions": "YYYYMMDDHHMISS",
+        "_FillValue": " "
+      },
+      "HISTORY_INSTITUTION": {
+        "long_name": "Institution which performed action",
+        "conventions": "Argo reference table 4",
+        "_FillValue": " "
+      },
+      "HISTORY_STEP": {
+        "long_name": "Step in data processing",
+        "conventions": "Argo reference table 12",
+        "_FillValue": " "
+      },
+      "HISTORY_SOFTWARE": {
+        "long_name": "Name of software which performed action",
+        "conventions": "Institution dependent",
+        "_FillValue": " "
+      },
+      "HISTORY_SOFTWARE_RELEASE": {
+        "long_name": "Version/release of software which performed action",
+        "conventions": "Institution dependent",
+        "_FillValue": " "
+      },
+      "HISTORY_REFERENCE": {
+        "long_name": "Reference of database",
+        "conventions": "Institution dependent",
+        "_FillValue": " "
+      },
+      "HISTORY_DATE": {
+        "long_name": "Date the history record was created",
+        "conventions": "YYYYMMDDHHMISS",
+        "_FillValue": " "
+      },
+      "HISTORY_ACTION": {
+        "long_name": "Action performed on data",
+        "conventions": "Argo reference table 7",
+        "_FillValue": " "
+      },
+      "HISTORY_PARAMETER": {
+        "long_name": "Station parameter action is performed on",
+        "conventions": "Argo reference table 3",
+        "_FillValue": " "
+      },
+      "HISTORY_START_PRES": {
+        "long_name": "Start pressure action applied on",
+        "_FillValue": 99999.0,
+        "units": "decibar"
+      },
+      "HISTORY_STOP_PRES": {
+        "long_name": "Stop pressure action applied on",
+        "_FillValue": 99999.0,
+        "units": "decibar"
+      },
+      "HISTORY_PREVIOUS_VALUE": {
+        "long_name": "Parameter/Flag previous value before action",
+        "_FillValue": 99999.0
+      },
+      "HISTORY_QCTEST": {
+        "long_name": "Documentation of tests performed, tests failed (in hex form)",
+        "conventions": "Write tests performed when ACTION=QCP$; tests failed when ACTION=QCF$",
+        "_FillValue": " "
+      }
+    },
+    "profile": "2902766-135"
+  },
+  "processing": {
+    "netcdf": "1.7.4",
+    "numpy": "2.5.3",
+    "gsw": "3.6.23",
+    "pressureToDepth": "-gsw.z_from_p(PRES_ADJUSTED, latitude), dynamic height/geopotential 0",
+    "temperature": "gsw.SA_from_SP(PSAL_ADJUSTED,p,lon,lat); gsw.pt0_from_t(SA,TEMP_ADJUSTED,p)",
+    "qc": "Delayed mode only; adjusted PRES/TEMP/PSAL, position and time QC=1; no rejected gaps",
+    "time": "Daily mean UTC midnight-to-midnight, labelled at noon; match profile's UTC day, no time interpolation",
+    "spatial": "Bilinear native 1/12 degree rectilinear grid; all nonzero-weight corners must be valid",
+    "vertical": "Linear on native physical model levels and observed converted depths; no extrapolation; observed gaps >100 m rejected",
+    "scientific": "Native grid Float32 decoded from packed NetCDF; no spatial/depth downsampling for comparisons",
+    "display": "Existing renderer samples the scientific array; never used for comparisons"
+  },
+  "caveats": [
+    "Reanalysis assimilates in-situ T/S profiles; independence is not established.",
+    "Daily mean vs instantaneous profile; temporal representativeness error is not quantified.",
+    "Fixed local historical subset; no live services or general NetCDF uploader.",
+    "Salinity is used only for thermodynamic conversion, not displayed."
+  ],
+  "files": {
+    "temperature.f32": {
+      "bytes": 6500604,
+      "sha256": "24ad91d8bc501b56fba4350c00fbd93c28f09c6ec4ff2d34027ec197e78194e4"
+    },
+    "case.json": {
+      "bytes": 26690,
+      "sha256": "f4eff12884622ebe150afaf8c2e8cee7d9064772ef1f59c006c7f4b764efb373"
+    }
+  }
+}

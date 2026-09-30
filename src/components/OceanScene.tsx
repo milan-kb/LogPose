@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { AlertTriangle, LoaderCircle, Radio } from "lucide-react";
-import { colourFor, formatDate, modelAt, REGION } from "../data/ocean";
+import { colourFor, formatTimestamp, modelAt, REGION } from "../data/ocean";
 import type { OceanData, Point, Profile } from "../data/ocean";
 
 interface Props {
@@ -17,8 +17,8 @@ interface Props {
   onSelect: (id: string) => void;
 }
 const SCALE = 0.0028;
-const xOf = (lon: number) => (lon - 87) * 0.55;
-const zOf = (lat: number) => -(lat - 13.5) * 0.5;
+const xOf = (lon: number) => (lon - (REGION.west + REGION.east) / 2) * 9.9 / (REGION.east - REGION.west);
+const zOf = (lat: number) => -(lat - (REGION.south + REGION.north) / 2) * 9.5 / (REGION.north - REGION.south);
 const position = (lon: number, lat: number, depth: number) =>
   new THREE.Vector3(xOf(lon), -depth * SCALE, zOf(lat));
 
@@ -119,7 +119,7 @@ function fieldMesh(
         ? REGION.south
         : REGION.south +
           (REGION.north - REGION.south) * (mode === "slice" ? v / nv : u / nu);
-    const d = mode === "slice" ? depth : (REGION.maxDepth * v) / nv;
+    const d = mode === "slice" ? depth : data.depths[0] + ((REGION.maxDepth - data.depths[0]) * v) / nv;
     const value = modelAt(data, lon, lat, d, time);
     const color =
       value === null
@@ -222,18 +222,18 @@ export default function OceanScene(props: Props) {
     (floor.material as THREE.Material).opacity = 0.4;
     base.add(floor);
     const perimeter = (d: number) => [
-      position(78, 4, d),
-      position(96, 4, d),
-      position(96, 23, d),
-      position(78, 23, d),
-      position(78, 4, d),
+      position(REGION.west, REGION.south, d),
+      position(REGION.east, REGION.south, d),
+      position(REGION.east, REGION.north, d),
+      position(REGION.west, REGION.north, d),
+      position(REGION.west, REGION.south, d),
     ];
     base.add(
       line(perimeter(0), "#7695a7", 0.65),
       line(perimeter(1200), "#487082", 0.7),
     );
-    for (const lon of [78, 96])
-      for (const lat of [4, 23])
+    for (const lon of [REGION.west, REGION.east])
+      for (const lat of [REGION.south, REGION.north])
         base.add(
           line(
             [position(lon, lat, 0), position(lon, lat, 1200)],
@@ -241,24 +241,24 @@ export default function OceanScene(props: Props) {
             0.5,
           ),
         );
-    for (let lon = 80; lon <= 94; lon += 2)
+    for (let lon = REGION.west + 2; lon < REGION.east; lon += 2)
       base.add(
-        line([position(lon, 4, 0), position(lon, 23, 0)], "#658997", 0.13),
+        line([position(lon, REGION.south, 0), position(lon, REGION.north, 0)], "#658997", 0.13),
       );
-    for (let lat = 6; lat <= 22; lat += 2)
+    for (let lat = REGION.south + 2; lat < REGION.north; lat += 2)
       base.add(
-        line([position(78, lat, 0), position(96, lat, 0)], "#658997", 0.13),
+        line([position(REGION.west, lat, 0), position(REGION.east, lat, 0)], "#658997", 0.13),
       );
     for (const d of [0, 400, 800, 1200]) {
-      base.add(label(`${d.toLocaleString()} m`, position(96.9, 3.5, d), 0.35));
+      base.add(label(`${d.toLocaleString()} m`, position(REGION.east + 0.5, REGION.south - 0.3, d), 0.35));
       base.add(
-        line([position(96, 4, d), position(96.35, 4, d)], "#94b5c5", 0.65),
+        line([position(REGION.east, REGION.south, d), position(REGION.east + 0.2, REGION.south, d)], "#94b5c5", 0.65),
       );
     }
-    for (const lon of [80, 84, 88, 92])
-      base.add(label(`${lon}° E`, position(lon, 2.9, 1200), 0.32));
-    for (const lat of [8, 14, 20])
-      base.add(label(`${lat}° N`, position(76.8, lat, 0), 0.32));
+    for (const lon of [84, 86, 88, 90])
+      base.add(label(`${lon}° E`, position(lon, REGION.south - 0.6, 1200), 0.32));
+    for (const lat of [12, 16, 20])
+      base.add(label(`${lat}° N`, position(REGION.west - 0.6, lat, 0), 0.32));
     for (const ring of props.data.land) {
       const clipped = clipRing(ring);
       if (clipped.length < 3) continue;
@@ -286,18 +286,12 @@ export default function OceanScene(props: Props) {
       );
     }
     base.add(
-      label("I N D I A", new THREE.Vector3(xOf(80.5), 0.13, zOf(19.5)), 0.45),
-    );
-    base.add(
-      label("SRI LANKA", new THREE.Vector3(xOf(80.65), 0.13, zOf(7.5)), 0.27),
-    );
-    base.add(
-      label("MYANMAR", new THREE.Vector3(xOf(94.2), 0.13, zOf(21.2)), 0.32),
+      label("I N D I A", new THREE.Vector3(xOf(83), 0.13, zOf(19.5)), 0.4),
     );
     base.add(
       label(
         "B A Y   O F   B E N G A L",
-        new THREE.Vector3(xOf(86), 0.05, zOf(20.2)),
+        new THREE.Vector3(xOf(87), 0.05, zOf(19)),
         0.29,
         "#80a2b1",
       ),
@@ -437,7 +431,7 @@ export default function OceanScene(props: Props) {
         "[data-depth-slice]",
       );
       if (depthTag) {
-        projected.copy(position(95.7, 13.5, latest.current.depth)).project(camera);
+        projected.copy(position(REGION.east - 0.15, (REGION.south + REGION.north) / 2, latest.current.depth)).project(camera);
         const hidden =
           Math.abs(projected.x) > 1 ||
           Math.abs(projected.y) > 1 ||
@@ -484,11 +478,11 @@ export default function OceanScene(props: Props) {
     state.fields.add(
       line(
         [
-          position(78, 4, props.depth),
-          position(96, 4, props.depth),
-          position(96, 23, props.depth),
-          position(78, 23, props.depth),
-          position(78, 4, props.depth),
+          position(REGION.west, REGION.south, props.depth),
+          position(REGION.east, REGION.south, props.depth),
+          position(REGION.east, REGION.north, props.depth),
+          position(REGION.west, REGION.north, props.depth),
+          position(REGION.west, REGION.south, props.depth),
         ],
         "#b9eee0",
         0.7,
@@ -506,7 +500,7 @@ export default function OceanScene(props: Props) {
       const start = position(p.lon, p.lat, 0);
       start.y = 0.25;
       const stem = line(
-        [start, position(p.lon, p.lat, active ? 1200 : props.depth)],
+        [start, position(p.lon, p.lat, active ? Math.min(1200, p.depths.at(-1)!) : props.depth)],
         active ? "#78dcca" : "#b1cdd2",
         active ? 1 : 0.3,
       );
@@ -526,7 +520,7 @@ export default function OceanScene(props: Props) {
       ring.position.copy(start);
       state.instruments.add(ring);
       if (active)
-        for (const depth of p.depths) {
+        for (const depth of p.depths.filter(d => d <= REGION.maxDepth)) {
           const dot = new THREE.Mesh(
             new THREE.SphereGeometry(0.045, 8, 8),
             new THREE.MeshBasicMaterial({ color: "#78dcca", depthTest: false }),
@@ -619,8 +613,9 @@ export default function OceanScene(props: Props) {
                 <span>
                   {p.lat.toFixed(2)}° N, {p.lon.toFixed(2)}° E
                 </span>
-                <span>0–1,200 m · {formatDate(p.time)} 2024, 12:00 UTC</span>
-                <small>Synthetic observation · select to compare</small>
+                <span>{p.depths[0].toFixed(1)}–{p.depths.at(-1)!.toFixed(0)} m · cycle {p.cycle}</span>
+                <span>{formatTimestamp(p.time)}</span>
+                <small>Argo · delayed mode · adjusted QC 1</small>
               </span>
             </button>
           ))}

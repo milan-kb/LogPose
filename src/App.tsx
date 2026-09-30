@@ -12,7 +12,7 @@ import {
 import OceanScene from "./components/OceanScene";
 import Inspector from "./components/Inspector";
 import Timeline from "./components/Timeline";
-import { loadOceanData, PALETTE, TIMES } from "./data/ocean";
+import { loadOceanData, PALETTE } from "./data/ocean";
 import type { OceanData } from "./data/ocean";
 
 export default function App() {
@@ -44,13 +44,13 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
-    if (!playing) return;
+    if (!playing || !data) return;
     const id = window.setInterval(
-      () => setTime((t) => (t + 1) % TIMES.length),
+      () => setTime((t) => (t + 1) % data.times.length),
       1800,
     );
     return () => clearInterval(id);
-  }, [playing]);
+  }, [playing, data]);
   useEffect(() => {
     if (info) dialog.current?.showModal();
     else if (dialog.current?.open) {
@@ -94,7 +94,7 @@ export default function App() {
           aria-label="About this demo"
         >
           <span className="demo-dot" />
-          Synthetic demo data
+          GLORYS12V1 + Argo · local case
           <Info size={16} />
         </button>
       </header>
@@ -117,7 +117,7 @@ export default function App() {
             <>
               <LoaderCircle size={30} className="spin" />
               <h2>Preparing your ocean workspace</h2>
-              <p>Loading local geography and representative temperatures…</p>
+              <p>Loading local GLORYS12V1 temperatures and a QC-qualified Argo profile…</p>
             </>
           )}
         </main>
@@ -135,7 +135,9 @@ export default function App() {
                 <span>
                   {profile
                     ? "Selected from the 3D water column · comparing temperature at the active depth"
-                    : "Move through depth and time, then select an observation."}
+                    : data.profiles[time].length
+                      ? "Move through depth and time, then select the Argo observation."
+                      : "No observation in this case on this day. Return to 15 September to compare."}
                 </span>
               </div>
               <div className="scene-actions">
@@ -182,7 +184,7 @@ export default function App() {
               <div className="scene-bottom">
                 <div className="temperature-legend">
                   <span>
-                    Temperature <b>°C</b>
+                    Potential temperature <b>°C</b>
                   </span>
                   <div
                     className="colour-ramp"
@@ -210,7 +212,7 @@ export default function App() {
                   <Thermometer size={19} />
                   Temperature
                 </strong>
-                <span className="supporting-label">Degrees Celsius · °C</span>
+                <span className="supporting-label">Potential · 0 dbar · °C</span>
               </div>
               <div className="depth-control">
                 <div className="control-heading">
@@ -228,9 +230,9 @@ export default function App() {
                   id="depth"
                   aria-label="Depth in metres"
                   type="range"
-                  min="0"
+                  min="1"
                   max="1200"
-                  step="25"
+                  step="1"
                   value={depth}
                   onChange={(e) => setDepth(Number(e.target.value))}
                   style={
@@ -240,11 +242,12 @@ export default function App() {
                   }
                 />
                 <div className="range-labels">
-                  <span>Surface</span>
+                    <span>1 m</span>
                   <span>1,200 m</span>
                 </div>
               </div>
               <Timeline
+                times={data.times}
                 time={time}
                 playing={playing}
                 onTime={(t) => {
@@ -268,7 +271,7 @@ export default function App() {
       )}
       <footer className="statusbar">
         <span>
-          Representative model + synthetic observations. Not live data.
+          Copernicus Marine GLORYS12V1 + Argo GDAC · September 2023 · Local historical subset, not live
         </span>
         <span>LOG POSE · SIH26067</span>
       </footer>
@@ -302,32 +305,36 @@ export default function App() {
           <div className="demo-disclosure">
             <Info size={20} />
             <p>
-              <strong>This is a representative prototype.</strong> Both the
-              model field and observation profiles are generated locally. They
-              are not live data, actual Argo measurements or an INCOIS product.
+              <strong>This prototype uses real historical data.</strong> Copernicus Marine
+              GLORYS12V1 reanalysis and an adjusted, delayed-mode Argo profile are bundled locally.
+              This is not a live service, operational forecast or independent model validation.
             </p>
           </div>
           <dl>
             <div>
               <dt>Model field</dt>
               <dd>
-                Deterministic thermocline with moving warm/cold features. 0.25°
-                grid, 25 m levels, five daily snapshots.
+                GLOBAL_MULTIYEAR_PHY_001_030 · GLORYS12V1, via NCAR GDEX.
+                82–92° E, 10–20° N; 15–17 September 2023. Native 1/12° grid and
+                37 nonuniform levels (0.49–1,245 m); daily UTC means labelled at noon.
               </dd>
             </div>
             <div>
               <dt>Profiles</dt>
               <dd>
-                Five synthetic Argo-style platforms per snapshot, with 15
-                sampled depths. Not measurements of a tracked float.
+                Argo 2902766, cycle 135 · CSIO, via Ifremer GDAC.
+                15 September 2023, 21:32:52 UTC. Adjusted pressure, temperature
+                and salinity: all 102 samples QC 1; delayed mode D. Only shown on its UTC day.
               </dd>
             </div>
             <div>
               <dt>Comparison</dt>
               <dd>
-                Model sampled at the profile position and timestamp. Bilinear
-                horizontal and linear depth interpolation. Mean and RMSE use
-                equal weight per valid paired sample.
+                Both sides use potential temperature at 0 dbar (°C). Argo in-situ
+                temperature and pressure are converted using TEOS-10 GSW and measured salinity.
+                Bilinear native-grid sampling; linear physical-depth interpolation; no extrapolation
+                or bridging invalid model cells. Instantaneous Argo vs same-day model mean.
+                Reanalysis assimilates in-situ profiles; independence is not established.
               </dd>
             </div>
             <div>
@@ -341,11 +348,13 @@ export default function App() {
             <div>
               <dt>Rendering</dt>
               <dd>
-                Depth slices and boundary sections of a 3D field. Vertical scale
-                exaggerated for visibility; not volume raycasting.
+                Depth slices and boundary sections of the real 3D field, shown to 1,200 m.
+                Vertical scale exaggerated for visibility; not volume raycasting.
+                Comparisons use native scientific arrays, not the rendered mesh.
               </dd>
             </div>
           </dl>
+          <p><a href="/real-case/manifest.json" target="_blank" rel="noreferrer">Source manifest, processing and SHA-256 checksums</a></p>
           <button className="primary-button" onClick={() => setInfo(false)}>
             Return to the ocean
             <ArrowRight size={17} />

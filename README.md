@@ -1,66 +1,68 @@
 # LOG POSE · Ocean workspace
 
-An interactive, local-data prototype for SIH26067. React + TypeScript + Three.js. No backend, credentials or upstream data service is required.
+A browser-based SIH26067 prototype with **real GLORYS12V1 reanalysis temperature and one real delayed-mode Argo profile**. React + TypeScript + Three.js. The complete prepared historical case is bundled locally; no accounts, backend or upstream availability are needed to run it.
 
 ## Run
 
 ```sh
 npm install
-npm run dev
+npm run dev -- --port 5173
 ```
 
-Open http://localhost:5173. For production: `npm run build`, then `npm run preview`. The `dist/` directory can be hosted by any static web server.
+Open http://localhost:5173. `npm run build` produces a static `dist/` including the real-data case; `npm run preview` serves it.
+
+## The case
+
+- **Model:** Copernicus Marine Global Ocean Physics Reanalysis, `GLOBAL_MULTIYEAR_PHY_001_030`, GLORYS12V1, acquired from the NCAR GDEX `d010049` THREDDS mirror. Three daily native-resolution subsets, **15–17 September 2023**, **82–92° E / 10–20° N**.
+- **Observation:** Ifremer Argo GDAC, CSIO DAC, WMO **2902766**, ascending cycle **135**, **15 September 2023 21:32:52 UTC**, **15.105° N / 87.882° E**. Adjusted pressure, temperature and salinity: all 102 samples QC 1, delayed mode D; position/time QC 1.
+- **Quantity compared:** potential temperature referenced to **0 dbar**, ITS-90 degrees Celsius. The measured in-situ temperature is converted using TEOS-10 GSW and measured adjusted salinity. Salinity is a conversion input only, not a new visualization feature.
+- **Time matching:** instantaneous profile against its containing UTC day's model mean, labelled at noon. Actual observation time is retained; offset from mean centre is **+9.5478 h**, not zero.
+- **Space/depth:** bilinear native model grid plus linear interpolation on actual nonuniform physical model depths. Reject any invalid contributing corner. Argo pressure becomes positive-down depth using latitude-dependent GSW conversion. No extrapolation; no observation gaps over 100 m.
+- **Important:** GLORYS assimilates in-situ T/S profiles. Independence from this profile is not established. This is a model–observation comparison, **not independent validation**.
 
 ## Recording flow (60–90 seconds)
 
-1. Start at the saved Bay of Bengal view. No profile is selected and the comparison panel is hidden.
-2. Drag the ocean to rotate; scroll to zoom. Reset using the circular-arrow button.
-3. Move the depth slider from 0 to 250 to 600 metres. The coloured plane moves through the actual depth-resolved field.
-4. Move the time slider, or play the timeline. Both model and synthetic profile snapshots update to the indicated date and time.
-5. Click LP-02 or LP-03 in the scene. The selected profile is highlighted through the water column.
-6. Read model temperature, observed temperature and their difference at the selected profile depth. The larger chart shows the full water column; click it to select a sampled depth.
-7. Expand **Comparison details** only when matching, provenance or summary metrics need to be shown. The demo-data button explains all prototype assumptions.
+1. State “real historical GLORYS12V1 + Argo, bundled locally; not a live forecast.”
+2. Rotate slightly, reset, then move depth from 25 to 250 to 600 m.
+3. Change the date. The daily mean changes; on 16–17 September the UI correctly reports no observation in this bounded case. Return to **15 September**.
+4. Select **2902766**. Its water-column samples and profile inspector appear.
+5. At **250 m**, model **12.11 °C**, Argo **12.04 °C**, difference **+0.08 °C**. Differences are computed before rounding (12.113217… − 12.037917… = 0.075300…).
+6. Click the profile chart to change depth. Scene, annotation, inspector and chart stay linked.
+7. Expand Comparison details: point out observation time vs daily mean, QC and interpolation. The About dialog and linked manifest disclose full provenance and limitations.
 
-Suggested wording: “This prototype uses a representative model field and synthetic observations. We can explore depth and time, select an instrument profile and inspect a calculated model–observation comparison.”
+## Scientific preparation and reproducibility
 
-## Scientific honesty
+See [`data/real-case/README.md`](data/real-case/README.md). Small native NetCDF **subsets**, the complete 22 KB Argo profile, manifest and independent source-derived verification values are retained. No global raw files are included.
 
-- **All temperatures and instrument profiles are synthetic.** No live INCOIS data or measured Argo observations are included.
-- The deterministic field has a thermocline and moving warm/cold features. It is not the output of an operational numerical ocean model.
-- Model arrays have explicit latitude, longitude, physical depth and time axes: 0.25° horizontal spacing, 25 m depth spacing, 0–1,200 m, five daily snapshots.
-- There are five illustrative Argo-style platforms per snapshot and 15 observation depths. Daily snapshots are not a claim about real Argo sampling frequency or a tracked instrument.
-- Model samples use bilinear horizontal and linear depth interpolation at the profile timestamp. Invalid values and out-of-domain requests are rejected; no extrapolation is performed.
-- Mean difference is model minus synthetic observation. RMSE and mean difference weight valid paired samples equally; these are not independent validation metrics.
-- Rendering uses a depth slice plus two boundary sections of the three-dimensional field, not volume raycasting. Depth is visually exaggerated approximately 560×. Original metre depths remain unchanged.
-- Geography is a regional equirectangular approximation. The 1,200 m water-column box is schematic, not bathymetry. Land cells are masked using the bundled coastline.
+`public/real-case/case.json` holds coordinates, profile values and QC. `temperature.f32` is a 6.5 MB little-endian native-resolution scientific array in **time, depth, latitude, longitude** order. The renderer samples this scientific array for its mesh; comparison calculations never read display pixels or a downsampled field.
 
-## Structure
-
-```text
-src/data/ocean.ts               Local dataset, sampling and comparison boundary
-src/components/OceanScene.tsx   Three.js rendering and camera lifecycle
-src/components/ProfileChart.tsx Linked scientific profile chart
-src/components/Inspector.tsx    Comparison, matching and provenance
-src/components/Timeline.tsx     Snapshot navigation and playback
-src/App.tsx                    Workspace controls and shared selection state
-```
-
-Replace `loadOceanData()` and its source metadata to introduce external scientific data. Preserve the model/observation distinction, coordinate/time semantics and the `modelAt`/comparison contract. The current sampler specifically supports a regular 0.25°/25 m grid: it must be generalized before using differently spaced real datasets.
+The application fails visibly if the local case is missing or invalid. There is **no synthetic fallback**.
 
 ## Checks
 
 ```sh
 npm test
-npm run build
-npx playwright install chromium
 npm run test:browser
+npm run build
 ```
 
-The browser suite verifies depth rendering changes, camera interaction, marker selection, time playback, profile comparison, local-only requests, phone layout and the data-error state.
+Browser checks deny all non-local requests while exercising the real-data workflow, comparison values, timestamps, empty observation days, playback, camera/reset, phone layout and missing-file error state.
 
-## Bundled assets
+## Structure
 
-- `public/coastline.geojson`: selected country exteriors from [Natural Earth 1:110m](https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_0_countries.geojson), public domain.
-- DM Sans and Space Grotesk from Google Fonts, locally bundled under the SIL Open Font License. License texts are in `public/fonts/`.
+```text
+data/real-case/                  Acquisition, source subsets, provenance, scientific checks
+public/real-case/                Offline prepared case shipped with the app
+src/data/ocean.ts                Local loading, native-axis sampling, matching and comparison
+src/components/OceanScene.tsx    Existing depth-slice/section renderer and camera lifecycle
+src/components/ProfileChart.tsx Linked potential-temperature profile chart
+src/components/Inspector.tsx    Comparison, matching and provenance
+src/components/Timeline.tsx     Daily-mean navigation and playback
+src/App.tsx                     Workspace and shared state
+```
 
-No external network requests are needed after serving the application.
+## Limits
+
+One fixed regional case, three daily fields, one profile, temperature only. This is not a general NetCDF uploader, operational integration, forecast or independently validated model. The scene uses depth slices and boundary sections, not volume raycasting. Depth is exaggerated (roughly 315× in this regional display); the box is schematic, not bathymetry. The view is limited to 1–1,200 m, while the scientific model retains the bracketing 1,245 m level and the full Argo profile extends to 1,958 m. Summary metrics use equally weighted valid observation samples within the displayed depth range; sampling is nonuniform and uncertainty is not quantified.
+
+Bundled geography: Natural Earth 1:110m country exteriors (public domain). Fonts: locally bundled DM Sans / Space Grotesk under SIL Open Font License.

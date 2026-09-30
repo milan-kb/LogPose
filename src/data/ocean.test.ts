@@ -1,113 +1,79 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import {
-  compareAtDepth,
-  compareProfile,
-  makeDataset,
-  modelAt,
-  representativeTemperature,
-  TIMES,
-} from "./ocean.ts";
+import { readFileSync } from "node:fs";
+import { compareAtDepth, compareProfile, matchProfile, modelAt, observedAt, validateCase } from "./ocean.ts";
+import type { OceanData } from "./ocean.ts";
 
-const data = makeDataset();
+const meta = JSON.parse(readFileSync("public/real-case/case.json", "utf8"));
+const bytes = readFileSync("public/real-case/temperature.f32");
+const temperatures = new Float32Array(bytes.length / 4);
+for (let i = 0; i < temperatures.length; i++) temperatures[i] = bytes.readFloatLE(i * 4);
+const data: OceanData = validateCase({ ...meta, temperatures, land: [] });
+const profile = data.profiles[0][0];
+const fixture = JSON.parse(readFileSync("data/real-case/verification.json", "utf8"));
+const close = (a: number | null, b: number, tolerance = 0.000003) => {
+  assert.notEqual(a, null);
+  assert.ok(Math.abs(a! - b) < tolerance, `${a} != ${b}`);
+};
 
-test("grid indexing preserves time, geographic axes and physical depth", () => {
-  for (const [lon, lat, depth, time] of [
-    [78, 4, 0, 0],
-    [96, 23, 1200, 4],
-    [85.5, 13.25, 250, 2],
-  ]) {
-    assert.ok(
-      Math.abs(
-        modelAt(data, lon, lat, depth, time)! -
-          representativeTemperature(lon, lat, depth, time),
-      ) < 0.00001,
-    );
-  }
-  assert.notEqual(modelAt(data, 86, 14, 250, 0), modelAt(data, 86, 14, 250, 4));
-  assert.ok(modelAt(data, 86, 14, 0, 0)! > modelAt(data, 86, 14, 1200, 0)!);
+test("native scientific grid agrees with independently decoded NetCDF source nodes", () => {
+  assert.deepEqual([data.times.length, data.depths.length, data.latitudes.length, data.longitudes.length], [3, 37, 121, 121]);
+  for (const node of fixture.nodes) close(modelAt(data, node.lon, node.lat, node.depth, node.time), node.value);
+  assert.ok(data.depths[0] > 0 && data.depths.at(-1)! > 1200);
+  assert.notEqual(data.depths[2] - data.depths[1], data.depths[1] - data.depths[0]);
+  assert.ok(modelAt(data, 88, 15, 25, 0)! > modelAt(data, 88, 15, 1200, 0)!);
 });
 
-test("interpolation uses all eight neighbouring values and rejects extrapolation", () => {
-  const expected =
-    [85, 85.25]
-      .flatMap((lon) =>
-        [13, 13.25].flatMap((lat) =>
-          [200, 225].map((z) => modelAt(data, lon, lat, z, 1)!),
-        ),
-      )
-      .reduce((a, b) => a + b, 0) / 8;
-  assert.ok(
-    Math.abs(modelAt(data, 85.125, 13.125, 212.5, 1)! - expected) < 1e-8,
-  );
-  for (const args of [
-    [77, 14, 250, 0],
-    [85, 24, 250, 0],
-    [85, 14, -1, 0],
-    [85, 14, 1201, 0],
-    [85, 14, 250, 5],
-    [85, 14, 250, 0.5],
-    [NaN, 14, 250, 0],
-  ]) {
-    assert.equal(modelAt(data, args[0], args[1], args[2], args[3]), null);
+test("real model and converted Argo values match independent source-derived comparisons", () => {
+  assert.equal(profile.id, fixture.profile);
+  assert.equal(profile.time, "2023-09-15T21:32:52Z");
+  assert.equal(profile.depths.length, 102);
+  for (const expected of fixture.comparisons) {
+    const actual = compareAtDepth(data, profile, expected.depth);
+    close(actual.model, expected.model);
+    close(actual.observed, expected.observed, 1e-10);
+    close(actual.difference, expected.difference);
+    assert.equal(actual.difference, actual.model! - actual.observed!);
   }
 });
 
-test("invalid model cells cannot silently enter comparisons", () => {
-  const masked = makeDataset([
-    [
-      [84.9, 12.9],
-      [85.1, 12.9],
-      [85.1, 13.1],
-      [84.9, 13.1],
-    ],
-  ]);
-  assert.equal(modelAt(masked, 85, 13, 200, 0), null);
-  assert.equal(modelAt(masked, 85.125, 13.125, 200, 0), null);
-  assert.ok(modelAt(masked, 85.25, 13.25, 200, 0) !== null);
+test("daily mean matching preserves observation timestamp and rejects other days/outside positions", () => {
+  const match = matchProfile(data, profile);
+  assert.equal(match.modelTime, fixture.modelTime);
+  close(match.offsetHours, fixture.offsetHours, 1e-10);
+  assert.equal(match.timeIndex, 0);
+  assert.equal(matchProfile(data, { ...profile, time: "2023-09-16T00:00:00Z" }).timeIndex, 1);
+  assert.equal(matchProfile(data, { ...profile, time: "2023-09-18T00:00:00Z" }).timeIndex, -1);
+  assert.equal(matchProfile(data, { ...profile, lon: 81 }).timeIndex, -1);
+  assert.deepEqual(data.profiles.slice(1), [[], []]);
 });
 
-test("comparison uses profile time, calculated differences and actual sample counts", () => {
-  for (let time = 0; time < TIMES.length; time++) {
-    const profile = data.profiles[time][0];
-    const result = compareProfile(data, profile);
-    assert.equal(profile.time, TIMES[time]);
-    assert.equal(result.count, 15);
-    const differences = profile.depths.map(
-      (depth, i) =>
-        modelAt(data, profile.lon, profile.lat, depth, time)! -
-        profile.temperatures[i],
-    );
-    assert.equal(
-      result.bias,
-      differences.reduce((a, b) => a + b, 0) / differences.length,
-    );
-    assert.equal(
-      result.rmse,
-      Math.sqrt(
-        differences.reduce((a, b) => a + b * b, 0) / differences.length,
-      ),
-    );
-    assert.ok(result.rmse! >= Math.abs(result.bias!));
-  }
-  const unavailable = compareProfile(data, {
-    ...data.profiles[0][0],
-    time: "2000-01-01T00:00:00Z",
-  });
-  assert.equal(unavailable.count, 0);
-  assert.equal(unavailable.bias, null);
-  assert.equal(unavailable.rmse, null);
+test("interpolation respects nonuniform axes and invalid corners without extrapolation", () => {
+  const grid: OceanData = { ...data, times: [data.times[0]], depths: [1, 100], latitudes: [10, 12], longitudes: [82, 85],
+    temperatures: new Float32Array([1, 2, 3, 4, 5, 6, 7, 8]) };
+  close(modelAt(grid, 83.5, 11, 50.5, 0), 4.5);
+  grid.temperatures[7] = NaN;
+  assert.equal(modelAt(grid, 83.5, 11, 50.5, 0), null);
+  assert.equal(modelAt(grid, 82, 10, 1, 0), 1);
+  for (const [lon, lat, z, t] of [[81, 15, 250, 0], [88, 21, 250, 0], [88, 15, 0, 0], [88, 15, 1300, 0],
+    [88, 15, 250, 3], [88, 15, 250, 0.5], [NaN, 15, 250, 0]]) assert.equal(modelAt(data, lon, lat, z, t), null);
 });
 
-test("headline comparison is evaluated at the exact selected depth", () => {
-  const profile = data.profiles[0][0];
-  const result = compareAtDepth(data, profile, 125);
-  assert.equal(result.depth, 125);
-  assert.equal(result.model, modelAt(data, profile.lon, profile.lat, 125, 0));
-  assert.equal(
-    result.observed,
-    (profile.temperatures[4] + profile.temperatures[5]) / 2,
-  );
-  assert.equal(result.difference, result.model! - result.observed!);
-  assert.equal(compareAtDepth(data, profile, 1201).observed, null);
+test("observation gaps and unsupported shallow depths cannot produce fabricated comparisons", () => {
+  assert.equal(compareAtDepth(data, profile, 0).difference, null);
+  assert.equal(observedAt(profile, 3000), null);
+  assert.equal(observedAt({ ...profile, depths: [1, 150], temperatures: [28, 15] }, 25), null);
+  assert.equal(observedAt({ ...profile, depths: [1, 25], temperatures: [NaN, 15] }, 10), null);
+  assert.throws(() => validateCase({ ...data, profiles: [[{ ...profile, qc: { ...profile.qc, TEMP: ["4"] } }], [], []] }));
+  assert.throws(() => validateCase({ ...data, temperatures: new Float32Array(2) }));
+});
+
+test("summary metrics count only valid pairs inside the displayed water column", () => {
+  const comparison = compareProfile(data, profile);
+  const valid = comparison.samples.filter(s => s.difference !== null);
+  assert.ok(valid.length > 50 && valid.length < 102);
+  assert.ok(comparison.samples.every(s => s.depth <= 1200));
+  close(comparison.bias, valid.reduce((sum, s) => sum + s.difference!, 0) / valid.length);
+  close(comparison.rmse, Math.sqrt(valid.reduce((sum, s) => sum + s.difference! ** 2, 0) / valid.length));
+  assert.equal(compareProfile(data, { ...profile, time: "2000-01-01T00:00:00Z" }).count, 0);
 });

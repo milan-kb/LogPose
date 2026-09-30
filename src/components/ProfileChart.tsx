@@ -26,8 +26,11 @@ export default function ProfileChart({
   const active = compareAtDepth(data, profile, depth);
   const path = (key: "model" | "observed") => {
     let connected = false;
-    return samples
-      .map((s) => {
+    const levels = [...new Set([...(key === "model" ? data.depths : profile.depths), depth, 1200])]
+      .filter(d => d <= 1200).sort((a, b) => a - b);
+    return levels
+      .map((z) => {
+        const s = compareAtDepth(data, profile, z);
         const t = s[key];
         if (t === null || !Number.isFinite(t)) {
           connected = false;
@@ -55,10 +58,10 @@ export default function ProfileChart({
       <svg
         viewBox="0 0 360 300"
         role="img"
-        aria-label={`Model and synthetic observed temperature profiles for ${profile.platform}; depth increases downward`}
+        aria-label={`Model and Argo potential temperature profiles for ${profile.platform}, cycle ${profile.cycle}; depth increases downward`}
         onPointerMove={(event) => setHover(pointerDepth(event))}
         onPointerLeave={() => setHover(null)}
-        onClick={(event) => onDepth(nearest(pointerDepth(event)).depth)}
+        onClick={(event) => onDepth(Math.max(1, Math.min(1200, Math.round(nearest(pointerDepth(event)).depth))))}
       >
         <text x="0" y="14" className="chart-caption">
           Depth (m)
@@ -88,7 +91,7 @@ export default function ProfileChart({
           </g>
         ))}
         <text x="195" y="291" textAnchor="middle" className="chart-caption">
-          Temperature (°C)
+          Potential temperature (°C)
         </text>
         <path
           d={path("model")}
@@ -105,7 +108,7 @@ export default function ProfileChart({
         />
         {samples.map(
           (s) =>
-            Number.isFinite(s.observed) && (
+            s.observed !== null && Number.isFinite(s.observed) && (
               <circle
                 key={s.depth}
                 cx={x(s.observed)}

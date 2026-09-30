@@ -1,12 +1,14 @@
 import { Pause, Play } from "lucide-react";
-import { formatDate, TIMES } from "../data/ocean";
+import { formatDate } from "../data/ocean";
 
 export default function Timeline({
+  times,
   time,
   playing,
   onTime,
   onPlay,
 }: {
+  times: string[];
   time: number;
   playing: boolean;
   onTime: (time: number) => void;
@@ -19,7 +21,7 @@ export default function Timeline({
           TIME
         </label>
         <strong>
-          {formatDate(TIMES[time])} 2024 <span>12:00 UTC</span>
+          {formatDate(times[time])} <span>Daily mean · UTC</span>
         </strong>
       </div>
       <div className="time-track">
@@ -37,23 +39,23 @@ export default function Timeline({
         <input
           id="time"
           aria-label="Ocean time"
-          aria-valuetext={`${formatDate(TIMES[time])} 2024, 12:00 UTC`}
+          aria-valuetext={`${formatDate(times[time])}, daily mean 00:00–24:00 UTC`}
           type="range"
           min="0"
-          max={TIMES.length - 1}
+          max={times.length - 1}
           step="1"
           value={time}
           onChange={(e) => onTime(Number(e.target.value))}
           style={
             {
-              "--range-progress": `${(time / (TIMES.length - 1)) * 100}%`,
+              "--range-progress": `${(time / (times.length - 1)) * 100}%`,
             } as React.CSSProperties
           }
         />
       </div>
       <div className="range-labels time-labels">
-        <span>15 Sep</span>
-        <span>19 Sep</span>
+        <span>{formatDate(times[0])}</span>
+        <span>{formatDate(times.at(-1)!)}</span>
       </div>
     </div>
   );
