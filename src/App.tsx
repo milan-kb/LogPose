@@ -94,7 +94,7 @@ export default function App() {
           aria-label="About this demo"
         >
           <span className="demo-dot" />
-          GLORYS12V1 + Argo · local case
+          Copernicus Marine GLORYS12V1 Reanalysis · Real Argo
           <Info size={16} />
         </button>
       </header>
@@ -271,7 +271,7 @@ export default function App() {
       )}
       <footer className="statusbar">
         <span>
-          Copernicus Marine GLORYS12V1 + Argo GDAC · September 2023 · Local historical subset, not live
+          Copernicus Marine GLORYS12V1 Reanalysis · Real Argo observation · Local historical case, not live
         </span>
         <span>LOG POSE · SIH26067</span>
       </footer>

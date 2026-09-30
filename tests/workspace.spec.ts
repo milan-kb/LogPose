@@ -17,7 +17,9 @@ test("real local case: scientific values, depth/time, selection, metadata and ca
   const marker = page.getByRole("button", { name: "Select profile 2902766", exact: true });
   await expect(marker).toBeVisible();
   await expect(page.getByRole("complementary", { name: "Observation inspector" })).toHaveCount(0);
-  await expect(page.locator(".demo-info")).toContainText("GLORYS12V1 + Argo");
+  await expect(page.locator(".demo-info")).toContainText("Copernicus Marine GLORYS12V1 Reanalysis · Real Argo");
+  await expect(page.getByTestId("depth-value")).toHaveText("250");
+  await expect(page.locator(".timeline .control-heading")).toContainText("15 Sept 2023 Daily mean · UTC");
   const canvas = page.locator(".ocean-canvas canvas");
   const initial = await canvas.screenshot();
   await page.getByRole("slider", { name: "Depth in metres" }).fill("600");
@@ -31,9 +33,9 @@ test("real local case: scientific values, depth/time, selection, metadata and ca
   await expect(page.getByRole("img", { name: /profiles for 2902766, cycle 135/ })).toBeVisible();
   await expect(marker).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("slider", { name: "Depth in metres" }).fill("225");
-  await expect(page.getByTestId("model-value")).toHaveText("12.61 °C");
-  await expect(page.getByTestId("observed-value")).toHaveText("12.49 °C");
-  await expect(page.getByTestId("point-difference")).toHaveText("+0.13 °C");
+  await expect(page.getByTestId("model-value")).toHaveText("12.611 °C");
+  await expect(page.getByTestId("observed-value")).toHaveText("12.485 °C");
+  await expect(page.getByTestId("point-difference")).toHaveText("+0.125 °C");
   await expect(page.locator(".selected-depth-label")).toHaveText("225");
   await page.getByText("Comparison details", { exact: true }).click();
   await expect(page.locator(".match-details")).toContainText("15 Sept 2023 21:32:52 UTC");
@@ -47,8 +49,8 @@ test("real local case: scientific values, depth/time, selection, metadata and ca
   await expect(page.getByTestId("depth-value")).toHaveText(chartDepth!);
   await expect(page.locator(".comparison-depth")).toContainText(`${chartDepth} m`);
   await page.getByRole("slider", { name: "Depth in metres" }).fill("1");
-  await expect(page.getByTestId("observed-value")).toHaveText("28.92 °C");
-  await expect(page.getByTestId("point-difference")).toHaveText("−0.02 °C");
+  await expect(page.getByTestId("observed-value")).toHaveText("28.922 °C");
+  await expect(page.getByTestId("point-difference")).toHaveText("−0.023 °C");
   await page.getByLabel("Observation profiles", { exact: true }).uncheck();
   await expect(marker).toHaveCount(0);
   await page.getByLabel("Observation profiles", { exact: true }).check();

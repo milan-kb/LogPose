@@ -21,7 +21,7 @@ export default function Inspector({
   const difference =
     sample.difference === null
       ? "—"
-      : `${sample.difference >= 0 ? "+" : "−"}${Math.abs(sample.difference).toFixed(2)}`;
+      : `${sample.difference >= 0 ? "+" : "−"}${Math.abs(sample.difference).toFixed(3)}`;
 
   return (
     <aside
@@ -59,7 +59,7 @@ export default function Inspector({
             MODEL
           </span>
           <strong data-testid="model-value">
-            {sample.model?.toFixed(2) ?? "—"}
+            {sample.model?.toFixed(3) ?? "—"}
             <small> °C</small>
           </strong>
         </div>
@@ -69,7 +69,7 @@ export default function Inspector({
             OBSERVED
           </span>
           <strong data-testid="observed-value">
-            {sample.observed !== null ? sample.observed.toFixed(2) : "—"}
+            {sample.observed !== null ? sample.observed.toFixed(3) : "—"}
             <small> °C</small>
           </strong>
         </div>

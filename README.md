@@ -26,7 +26,7 @@ Open http://localhost:5173. `npm run build` produces a static `dist/` including 
 2. Rotate slightly, reset, then move depth from 25 to 250 to 600 m.
 3. Change the date. The daily mean changes; on 16–17 September the UI correctly reports no observation in this bounded case. Return to **15 September**.
 4. Select **2902766**. Its water-column samples and profile inspector appear.
-5. At **250 m**, model **12.11 °C**, Argo **12.04 °C**, difference **+0.08 °C**. Differences are computed before rounding (12.113217… − 12.037917… = 0.075300…).
+5. At **250 m**, model **12.113 °C**, Argo **12.038 °C**, difference **+0.075 °C**. Values come from the existing real-data calculation (12.113217… − 12.037917… = 0.075300…).
 6. Click the profile chart to change depth. Scene, annotation, inspector and chart stay linked.
 7. Expand Comparison details: point out observation time vs daily mean, QC and interpolation. The About dialog and linked manifest disclose full provenance and limitations.
 
